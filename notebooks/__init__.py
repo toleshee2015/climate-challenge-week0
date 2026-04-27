@@ -1,0 +1,1 @@
+duplicate_count = df.duplicated().sum()
