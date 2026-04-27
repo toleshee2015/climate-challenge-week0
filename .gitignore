@@ -1,1 +1,15 @@
+# Ignore data files
+data/
+*.csv
+# Jupyter checkpoints
 .ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# VS Code
+.vscode/
