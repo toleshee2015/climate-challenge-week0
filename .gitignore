@@ -12,4 +12,6 @@ __pycache__/
 venv/
 
 # VS Code
-.vscode/
+.vscode/.venv/ 
+venv/ 
+notebooks/ 
