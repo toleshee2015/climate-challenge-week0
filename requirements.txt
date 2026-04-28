@@ -1,13 +1,6 @@
-pandas>=2.0
 numpy==1.26.4
-<<<<<<< HEAD
-scipy>=1.10
-matplotlib>=3.7
-pytest>=7.0,<9.0
-=======
 pandas==2.2.2
 scipy==1.11.4
 matplotlib==3.8.4
 seaborn==0.13.2
-pytest
->>>>>>> 7d89173 (fix: add pytest and fix CI pipeline)
+pytest>=7.0,<9.0
