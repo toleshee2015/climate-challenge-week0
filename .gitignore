@@ -17,4 +17,4 @@ venv/
 .pytest_cache/
 
 # OS files
-.DS_Store
+.DS_Storenotebooks/ 
