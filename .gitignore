@@ -1,20 +1,7 @@
-# Python
 __pycache__/
 *.pyc
-*.pyo
-
-# virtual environments
-.venv/
-venv/
-
-# Jupyter
 .ipynb_checkpoints/
-
-# VS Code
+.env
+.venv/
 .vscode/
-
-# pytest cache
-.pytest_cache/
-
-# OS files
-.DS_Storenotebooks/ 
+.DS_Store
