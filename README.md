@@ -41,4 +41,4 @@ streamlit run app/main.py
 - Map-based visualizations
 
 ## Author
-[Your Full Name] | Women in Tech Program – Paper Airplanes | 2026
+Almaz Kisi Gonfa | Women in Tech Program – Paper Airplanes | 2026
