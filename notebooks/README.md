@@ -11,6 +11,7 @@ without any coding knowledge.
 - Pandas
 - Plotly
 - NumPy / SciPy
+- pytest
 
 ## Project Structure
 climate-challenge-week0/
@@ -41,4 +42,4 @@ streamlit run app/main.py
 - Map-based visualizations
 
 ## Author
-[Your Full Name] | Women in Tech Program – Paper Airplanes | 2026
+Almaz Kisi | Women in Tech Program – Paper Airplanes | 2026
