@@ -1,6 +1,6 @@
 # Ignore data files
-data/
 *.csv
+data/
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
