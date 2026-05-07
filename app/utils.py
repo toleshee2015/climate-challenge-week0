@@ -5,7 +5,7 @@ def load_data():
     """Load the Ethiopia climate dataset"""
 
     BASE_DIR = Path(__file__).resolve().parent.parent
-    data_path = BASE_DIR / "data" / "ethiopia.csv"
+    data_path = BASE_DIR / "data" / "ethiopia.csv."
 
     df = pd.read_csv(data_path)
 
