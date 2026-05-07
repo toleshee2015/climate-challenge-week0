@@ -1,6 +1,6 @@
 import streamlit as st
 from utils import load_data, clean_data
-from analysis import (
+from app.analysis import (
     get_temperature_stats,
     plot_temperature_trend,
     plot_humidity_chart,
