@@ -1,37 +1,52 @@
 import streamlit as st
-)
+import pandas as pd
+from pathlib import Path
 
-# Chart type selection
-chart_type = st.sidebar.radio(
-    "Select chart type",
-    ["Line Chart", "Bar Chart", "Area Chart"]
-)
+# Title
+st.title("Climate Dashboard")
 
-# -----------------------------
-# Display Dataset
-# -----------------------------
-st.subheader("Dataset Preview")
-st.dataframe(data.head(num_rows))
+# Load data
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = BASE_DIR / "data" / "ethiopia.csv"
 
-# -----------------------------
-# Dataset Information
-# -----------------------------
+data = pd.read_csv(file_path)
+
+# Success message
+st.success("Data loaded successfully")
+
+# Dataset shape
 st.subheader("Dataset Shape")
 st.write(data.shape)
 
+# Preview
+st.subheader("Dataset Preview")
+st.dataframe(data.head())
+
+# Column names
 st.subheader("Column Names")
 st.write(data.columns.tolist())
 
-# -----------------------------
 # Statistics
-# -----------------------------
 st.subheader("Statistics")
 st.write(data.describe())
 
-# -----------------------------
-# Visualization Section
-# -----------------------------
-st.subheader(f"Visualization for {selected_column}")
+# Sidebar controls
+st.sidebar.header("Controls")
+
+numeric_columns = data.select_dtypes(include=['number']).columns.tolist()
+
+selected_column = st.sidebar.selectbox(
+    "Select a column",
+    numeric_columns
+)
+
+chart_type = st.sidebar.radio(
+    "Choose chart type",
+    ["Line Chart", "Bar Chart", "Area Chart"]
+)
+
+# Visualization
+st.subheader(f"{chart_type} for {selected_column}")
 
 chart_data = data[[selected_column]]
 
@@ -43,26 +58,3 @@ elif chart_type == "Bar Chart":
 
 elif chart_type == "Area Chart":
     st.area_chart(chart_data)
-
-# -----------------------------
-# Optional Filters
-# -----------------------------
-st.subheader("Filter Data")
-
-min_value = float(data[selected_column].min())
-max_value = float(data[selected_column].max())
-
-range_values = st.slider(
-    "Select value range",
-    min_value,
-    max_value,
-    (min_value, max_value)
-)
-
-filtered_data = data[
-    (data[selected_column] >= range_values[0]) &
-    (data[selected_column] <= range_values[1])
-]
-
-st.write("Filtered Data")
-st.dataframe(filtered_data)
