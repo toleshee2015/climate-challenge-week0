@@ -1,20 +1,14 @@
 import pandas as pd
+from pathlib import Path
 
 
-class ClimateDataLoader:
-    def __init__(self, file_path):
-        self.file_path = file_path
-        self.data = None
+class DataLoader:
 
-    def load_data(self):
-        self.data = pd.read_csv(self.file_path)
-        return self.data
+    @staticmethod
+    def load_data():
 
-    def clean_data(self):
-        if self.data is not None:
-            self.data = self.data.drop_duplicates()
-            self.data = self.data.dropna()
-        return self.data
+        BASE_DIR = Path(__file__).resolve().parent.parent
 
-    def get_columns(self):
-        return self.data.columns.tolist()
+        file_path = BASE_DIR / "data" / "ethiopia.csv"
+
+        return pd.read_csv(file_path)
