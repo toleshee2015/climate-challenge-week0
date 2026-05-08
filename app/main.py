@@ -1,6 +1,6 @@
-from src.dashboard import ClimateDashboard
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = BASE_DIR / "data" / "ethiopia.csv"
 
-if __name__ == "__main__":
-    app = ClimateDashboard()
-    app.run()
+data = pd.read_csv(file_path)
