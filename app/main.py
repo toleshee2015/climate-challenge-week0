@@ -49,3 +49,11 @@ st.bar_chart(latest_data.set_index("country")[indicator])
 st.subheader("📁 Filtered Data")
 
 st.dataframe(filtered_data)
+mode = st.radio(
+    "Analysis Mode",
+    ["Single Country", "Africa Comparison"]
+)
+if mode == "Single Country":
+    filtered_data = data[data["country"] == "Ethiopia"]
+else:
+    filtered_data = data[data["country"].isin(selected_countries)]
