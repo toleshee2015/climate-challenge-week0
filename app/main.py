@@ -190,23 +190,13 @@ st.subheader("📌 Statistical Summary")
 st.dataframe(filtered_data.describe())
 # =============================
 # =============================
+# =============================
 # 🌡️ TOP WARMING COUNTRIES RANKING
 # =============================
 st.subheader("🌡️ Top Warming Countries Ranking")
-# 15. FOOTER DESCRIPTION
-# =============================
-st.info("""
-This dashboard provides comparative climate analysis across African countries.
 
-It supports:
-- Country selection with flags
-- Climate variable analysis
-- Time-series comparison
-- Interactive visualization
-""")
 if all(col in filtered_data.columns for col in ["country", "year"]):
 
-    # compute average temperature per country
     warming_rank = (
         filtered_data
         .groupby("country")[selected_column]
@@ -215,16 +205,16 @@ if all(col in filtered_data.columns for col in ["country", "year"]):
         .reset_index()
     )
 
-    # rename for clarity
     warming_rank.columns = ["Country", f"Avg {selected_column}"]
 
-    st.markdown("### 🔥 Highest Average Values (Warming Indicator)")
-    st.dataframe(warming_rank)
-        st.markdown("### 📊 Visual Ranking")
+    st.markdown("### 🔥 Highest Average Values")
 
-    st.bar_chart(
-        warming_rank.set_index("Country")
-    )
+    st.dataframe(warming_rank)
+
+    st.markdown("### 📊 Visual Ranking")
+
+    st.bar_chart(warming_rank.set_index("Country"))
+
     top_country = warming_rank.iloc[0]
 
     st.success(
