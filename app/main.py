@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 # Title
-st.title("Climate Dashboard")
+st.title("Ethiopia Climate Analysis Dashboard")
 
 # Load data
 BASE_DIR = Path(__file__).resolve().parent.parent
