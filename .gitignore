@@ -1,18 +1,5 @@
-# Ignore data files
-*.csv
-data/
-
-# Jupyter checkpoints
-.ipynb_checkpoints/
-
-# Python
-__pycache__/
-*.pyc
-
-# Virtual environment
-.venv/
 venv/
-
-# VS Code
-.vscode/
-notebooks/ 
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.env
