@@ -1,33 +1,16 @@
-import plotly.express as px
+import streamlit as st
 
 
-class ClimateVisualizer:
-    def __init__(self, dataframe):
-        self.df = dataframe
+class Visualizer:
 
-    def line_chart(self, x_column, y_column, title):
-        fig = px.line(
-            self.df,
-            x=x_column,
-            y=y_column,
-            title=title,
-        )
-        return fig
+    @staticmethod
+    def show_chart(chart_type, data):
 
-    def bar_chart(self, x_column, y_column, title):
-        fig = px.bar(
-            self.df,
-            x=x_column,
-            y=y_column,
-            title=title,
-        )
-        return fig
+        if chart_type == "Line Chart":
+            st.line_chart(data)
 
-    def scatter_chart(self, x_column, y_column, title):
-        fig = px.scatter(
-            self.df,
-            x=x_column,
-            y=y_column,
-            title=title,
-        )
-        return fig
+        elif chart_type == "Bar Chart":
+            st.bar_chart(data)
+
+        elif chart_type == "Area Chart":
+            st.area_chart(data)
