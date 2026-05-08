@@ -78,12 +78,21 @@ st.markdown("### 📊 Available Indicators")
 st.write(data.select_dtypes(include=["number"]).columns.tolist())
 # =============================
 # =============================
+# =============================
 # 8. SIDEBAR - COUNTRY SELECTION (WITH FLAGS)
 # =============================
 st.sidebar.header("🌍 Country Comparison")
 
-if "country" in data.columns:
-    countries = sorted(data["country"].unique())
+# safer column detection (handles case differences like Country, country, etc.)
+country_col = None
+for col in data.columns:
+    if col.lower() == "country":
+        country_col = col
+        break
+
+if country_col is not None:
+
+    countries = sorted(data[country_col].unique())
 
     # Map countries to flag + name
     country_options = [
@@ -101,7 +110,7 @@ if "country" in data.columns:
         c.split(" ", 1)[1] for c in selected_display
     ]
 
-    filtered_data = data[data["country"].isin(selected_countries)]
+    filtered_data = data[data[country_col].isin(selected_countries)]
 
 else:
     st.sidebar.warning("No country column found in dataset.")
