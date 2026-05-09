@@ -7,16 +7,13 @@ class Utils:
             "Ethiopia": "🇪🇹",
             "Kenya": "🇰🇪",
             "Nigeria": "🇳🇬",
-            "Tanzania": "🇹🇿",
-            "Sudan": "🇸🇩",
-            "Uganda": "🇺🇬",
+            "Sudan": "SD",
+            "tanzania": "Tz"
         }
 
     @staticmethod
-    def find_country_column(data):
+    def filter_countries(data, countries):
 
-        for col in data.columns:
-            if col.lower() == "country":
-                return col
-
-        return None
+        return data[
+            data["country"].isin(countries)
+        ]
