@@ -146,13 +146,11 @@ class ClimateDashboard:
         # -----------------------------
         # 🔥 VISUALIZER INTEGRATION (YOUR REQUESTED CODE ADDED HERE)
         # -----------------------------
-        st.subheader(f"📊 {self.chart_type}")
-
-        Visualizer.show_chart(
-            self.chart_type,
-            self.filtered_data,
-            self.selected_column
-        )
+       Visualizer.show_chart(
+    self.chart_type,
+    self.filtered_data,
+    self.selected_column
+)
 
         # -----------------------------
         # DISTRIBUTION
