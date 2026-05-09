@@ -22,22 +22,16 @@ class ClimateDashboard:
 
     def __init__(self):
 
-        # Load data
+        # Load dataset
         self.data = DataLoader.load_data()
 
-        # FIX: normalize column names (this fixes KeyError: 'country')
+        # FIX: normalize column names
         self.data.columns = (
             self.data.columns
             .str.strip()
             .str.lower()
         )
 
-        # Debug (remove later if you want)
-        # st.write(self.data.columns)
-
-        self.country_flags = Utils.get_country_flags()
-
-        # default values (avoid attribute errors)
         self.filtered_data = self.data.copy()
         self.selected_column = None
         self.chart_type = None
@@ -54,24 +48,11 @@ class ClimateDashboard:
         )
 
     # -----------------------------------
-    # SIDEBAR CONTROLS
+    # SIDEBAR (FIXED FOR YOUR DATASET)
     # -----------------------------------
     def sidebar(self):
 
         st.sidebar.title("⚙ Settings")
-
-        # Ensure 'country' exists before using it
-        if "country" not in self.data.columns:
-            st.error(f"'country' column not found. Available columns: {list(self.data.columns)}")
-            st.stop()
-
-        countries = sorted(self.data["country"].dropna().unique())
-
-        selected_countries = st.sidebar.multiselect(
-            "Select Countries",
-            countries,
-            default=countries[:3] if len(countries) >= 3 else countries
-        )
 
         # numeric columns only
         numeric_columns = self.data.select_dtypes(include="number").columns.tolist()
@@ -81,7 +62,7 @@ class ClimateDashboard:
             st.stop()
 
         self.selected_column = st.sidebar.selectbox(
-            "Select Indicator",
+            "Select Climate Variable",
             numeric_columns
         )
 
@@ -90,67 +71,83 @@ class ClimateDashboard:
             ["Line Chart", "Bar Chart", "Area Chart"]
         )
 
-        self.show_ranking = st.sidebar.checkbox("Show Ranking", True)
-
-        self.show_notebook = st.sidebar.checkbox("Show Notebook Viewer", False)
-
-        # FILTER DATA (safe utility function)
-        self.filtered_data = Utils.filter_countries(
-            self.data,
-            selected_countries
+        self.show_notebook = st.sidebar.checkbox(
+            "Show Notebook Viewer",
+            False
         )
+
+        # YEAR FILTER (since dataset has year)
+        if "year" in self.data.columns:
+
+            years = sorted(self.data["year"].unique())
+
+            selected_years = st.sidebar.multiselect(
+                "Select Years",
+                years,
+                default=years[:3] if len(years) >= 3 else years
+            )
+
+            self.filtered_data = self.data[
+                self.data["year"].isin(selected_years)
+            ]
+
+        else:
+
+            self.filtered_data = self.data.copy()
 
     # -----------------------------------
     # DASHBOARD
     # -----------------------------------
     def dashboard(self):
 
-        st.title("🌍 Africa Climate Dashboard")
+        st.title("🌍 Climate Dashboard")
 
-        # -------------------------
-        # QUICK METRICS
-        # -------------------------
+        # -----------------------------------
+        # OVERVIEW METRICS
+        # -----------------------------------
         st.subheader("📊 Overview")
 
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
 
         col1.metric("Rows", self.filtered_data.shape[0])
         col2.metric("Columns", self.filtered_data.shape[1])
 
-        avg = ClimateAnalysis.calculate_average(
+        avg_value = ClimateAnalysis.calculate_average(
             self.filtered_data,
             self.selected_column
         )
 
-        col3.metric("Average", round(avg, 2))
+        st.metric("Average Value", round(avg_value, 2))
 
-        # -------------------------
+        # -----------------------------------
         # DATA PREVIEW
-        # -------------------------
-        st.subheader("📁 Data Preview")
-        st.dataframe(self.filtered_data.head(10), use_container_width=True)
+        # -----------------------------------
+        st.subheader("📁 Dataset Preview")
 
-        # -------------------------
-        # COUNTRY COMPARISON
-        # -------------------------
-        st.subheader("🌍 Country Comparison")
-
-        comparison = ClimateAnalysis.create_comparison_table(
-            self.filtered_data,
-            self.selected_column
+        st.dataframe(
+            self.filtered_data.head(10),
+            use_container_width=True
         )
 
-        st.dataframe(comparison)
+        # -----------------------------------
+        # TREND ANALYSIS (FIXED FOR NO COUNTRY DATA)
+        # -----------------------------------
+        st.subheader("📈 Climate Trend")
 
-        Visualizer.show_chart(
-            "Line Chart",
-            comparison
-        )
+        if "year" in self.filtered_data.columns:
 
-        # -------------------------
+            trend_data = self.filtered_data.groupby("year")[self.selected_column].mean()
+
+            st.line_chart(trend_data)
+
+        else:
+
+            st.line_chart(self.filtered_data[self.selected_column])
+
+        # -----------------------------------
         # CHART VIEW
-        # -------------------------
-        st.subheader(f"📈 {self.chart_type}")
+        # -----------------------------------
+        st.subheader(f"📊 {self.chart_type}")
 
         Visualizer.show_chart(
             self.chart_type,
@@ -158,25 +155,16 @@ class ClimateDashboard:
             self.selected_column
         )
 
-        # -------------------------
-        # RANKING
-        # -------------------------
-        if self.show_ranking:
+        # -----------------------------------
+        # DISTRIBUTION
+        # -----------------------------------
+        st.subheader("📊 Distribution")
 
-            st.subheader("🔥 Country Ranking")
+        st.bar_chart(self.filtered_data[self.selected_column])
 
-            ranking = ClimateAnalysis.generate_ranking(
-                self.filtered_data,
-                self.selected_column
-            )
-
-            st.dataframe(ranking, use_container_width=True)
-
-            st.bar_chart(ranking.set_index("country"))
-
-        # -------------------------
+        # -----------------------------------
         # NOTEBOOK VIEWER
-        # -------------------------
+        # -----------------------------------
         if self.show_notebook:
 
             NotebookViewer.display_notebook_info()
