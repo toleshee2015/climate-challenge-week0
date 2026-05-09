@@ -10,18 +10,23 @@ class Visualizer:
             st.warning("No data available")
             return
 
-        # prevent crash if column missing
+        # safety check
         if column not in data.columns:
             st.error(f"Column '{column}' not found in dataset")
             return
 
-        # safe index selection
-        index_col = "doy" if "doy" in data.columns else data.columns[0]
-
         if chart_type == "line":
-            st.line_chart(data.set_index(index_col)[column])
+
+            # ✅ FIX: use correct index safely
+            if "doy" in data.columns:
+                st.line_chart(data.set_index("doy")[column])
+            elif "year" in data.columns:
+                st.line_chart(data.set_index("year")[column])
+            else:
+                st.line_chart(data[column])
 
         elif chart_type == "bar":
+
             if "year" in data.columns:
                 yearly = data.groupby("year")[column].mean()
                 st.bar_chart(yearly)
