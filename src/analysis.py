@@ -1,68 +1,93 @@
 import pandas as pd
 import plotly.express as px
 
-def get_temperature_stats(df):
-    stats = {
-        "avg_temp": round(df["T2M"].mean(), 2),
-        "max_temp": round(df["T2M_MAX"].max(), 2),
-        "min_temp": round(df["T2M_MIN"].min(), 2),
-        "temp_range": round(df["T2M_RANGE"].mean(), 2)
-    }
-    return stats
 
-def plot_line_chart(df, column):
-    """Generic line chart for any climate variable"""
-    if column not in df.columns:
-        return None
-    df = df.copy()
-    df = df.sort_values("DOY")
-    fig = px.line(
-        df,
-        x="DOY",
-        y=column,
-        color="YEAR" if "YEAR" in df.columns else None,
-        title=f"{column} Over Time",
-        labels={"DOY": "Day of Year", column: column}
-    )
-    return fig
+class ClimateAnalysis:
 
-def plot_bar_chart(df, column):
-    """Generic bar chart for any climate variable"""
-    if column not in df.columns:
-        return None
-    df = df.copy()
-    yearly = df.groupby("YEAR")[column].mean().reset_index()
-    fig = px.bar(
-        yearly,
-        x="YEAR",
-        y=column,
-        title=f"Yearly Average of {column}",
-        labels={"YEAR": "Year", column: column}
-    )
-    return fig
+    # -----------------------------
+    # BASIC STATS
+    # -----------------------------
+    @staticmethod
+    def calculate_average(df, column):
+        if column not in df.columns:
+            return 0
+        return df[column].mean()
 
-def plot_histogram(df, column):
-    """Generic histogram for any climate variable"""
-    if column not in df.columns:
-        return None
-    fig = px.histogram(
-        df,
-        x=column,
-        title=f"Distribution of {column}",
-        labels={column: column}
-    )
-    return fig
+    # -----------------------------
+    # TEMPERATURE STATS
+    # -----------------------------
+    @staticmethod
+    def get_temperature_stats(df):
+        return {
+            "avg_temp": df["t2m"].mean(),
+            "max_temp": df["t2m_max"].max(),
+            "min_temp": df["t2m_min"].min(),
+            "temp_range": df["t2m_range"].mean()
+        }
 
-def plot_temperature_trend(df):
-    return plot_line_chart(df, "T2M")
+    # -----------------------------
+    # COMPARISON TABLE
+    # -----------------------------
+    @staticmethod
+    def create_comparison_table(df, selected_column):
+        if "year" not in df.columns:
+            return df
 
-def plot_humidity_chart(df):
-    return plot_histogram(df, "RH2M")
+        return df.pivot_table(
+            index="year",
+            values=selected_column,
+            aggfunc="mean"
+        )
 
-def plot_wind_speed(df):
-    return plot_line_chart(df, "WS2M")
+    # -----------------------------
+    # RANKING
+    # -----------------------------
+    @staticmethod
+    def generate_ranking(df, column):
+        return (
+            df.groupby("year")[column]
+            .mean()
+            .reset_index()
+            .sort_values(column, ascending=False)
+        )
 
-def get_yearly_summary(df):
-    return df.groupby("YEAR")[
-        ["T2M", "RH2M", "WS2M", "PRECTOTCORR"]
-    ].mean().reset_index()
+    # -----------------------------
+    # PLOTLY LINE CHART
+    # -----------------------------
+    @staticmethod
+    def plot_line_chart(df, column):
+        if column not in df.columns:
+            return None
+
+        df = df.sort_values("doy")
+
+        return px.line(
+            df,
+            x="doy",
+            y=column,
+            title=f"{column} Over Time"
+        )
+
+    # -----------------------------
+    # PLOTLY BAR CHART
+    # -----------------------------
+    @staticmethod
+    def plot_bar_chart(df, column):
+        if column not in df.columns:
+            return None
+
+        yearly = df.groupby("year")[column].mean().reset_index()
+
+        return px.bar(
+            yearly,
+            x="year",
+            y=column,
+            title=f"Yearly Average of {column}"
+        )
+
+    # -----------------------------
+    # HISTOGRAM
+    # -----------------------------
+    @staticmethod
+    def plot_histogram(df, column):
+        return px.histogram(df, x=column)
