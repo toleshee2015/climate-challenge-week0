@@ -6,9 +6,9 @@ class Visualizer:
     @staticmethod
     def show_chart(chart_type, data, column=None):
 
-        # SAFETY CHECK
+        # Safety check
         if data is None or len(data) == 0:
-            st.warning("No data available for visualization")
+            st.warning("No data available")
             return
 
         # LINE CHART
@@ -36,4 +36,4 @@ class Visualizer:
                 st.area_chart(data)
 
         else:
-            st.warning(f"Unsupported chart type: {chart_type}")
+            st.warning("Invalid chart type selected")
