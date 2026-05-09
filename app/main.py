@@ -42,7 +42,7 @@ class ClimateDashboard:
     def setup_page(self):
 
         st.set_page_config(
-            page_title="Climate Dashboard",
+            page_title="Climate Analysis Interface",
             page_icon="🌍",
             layout="wide"
         )
@@ -52,7 +52,7 @@ class ClimateDashboard:
     # -----------------------------------
     def sidebar(self):
 
-        st.sidebar.title("⚙ Dashboard Settings")
+        st.sidebar.title("⚙ CLIMATE VARIABLE")
 
         numeric_columns = self.data.select_dtypes(include="number").columns.tolist()
 
