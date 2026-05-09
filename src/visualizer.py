@@ -6,7 +6,9 @@ class Visualizer:
     @staticmethod
     def show_chart(chart_type, data, column=None):
 
+        # -----------------------------
         # LINE CHART
+        # -----------------------------
         if chart_type == "Line Chart":
 
             if column and column in data.columns:
@@ -14,7 +16,9 @@ class Visualizer:
             else:
                 st.line_chart(data)
 
+        # -----------------------------
         # BAR CHART
+        # -----------------------------
         elif chart_type == "Bar Chart":
 
             if column and column in data.columns:
@@ -22,7 +26,9 @@ class Visualizer:
             else:
                 st.bar_chart(data)
 
+        # -----------------------------
         # AREA CHART
+        # -----------------------------
         elif chart_type == "Area Chart":
 
             if column and column in data.columns:
@@ -30,5 +36,8 @@ class Visualizer:
             else:
                 st.area_chart(data)
 
+        # -----------------------------
+        # FALLBACK
+        # -----------------------------
         else:
-            st.warning("Unknown chart type selected")
+            st.warning("Invalid chart type selected")
