@@ -25,7 +25,7 @@ class ClimateDashboard:
         # Load dataset
         self.data = DataLoader.load_data()
 
-        # FIX: normalize column names
+        # CLEAN COLUMN NAMES (IMPORTANT FIX)
         self.data.columns = (
             self.data.columns
             .str.strip()
@@ -42,19 +42,18 @@ class ClimateDashboard:
     def setup_page(self):
 
         st.set_page_config(
-            page_title="Africa Climate Dashboard",
+            page_title="Climate Dashboard",
             page_icon="🌍",
             layout="wide"
         )
 
     # -----------------------------------
-    # SIDEBAR (FIXED FOR YOUR DATASET)
+    # SIDEBAR
     # -----------------------------------
     def sidebar(self):
 
         st.sidebar.title("⚙ Settings")
 
-        # numeric columns only
         numeric_columns = self.data.select_dtypes(include="number").columns.tolist()
 
         if not numeric_columns:
@@ -76,7 +75,7 @@ class ClimateDashboard:
             False
         )
 
-        # YEAR FILTER (since dataset has year)
+        # Year filter (safe)
         if "year" in self.data.columns:
 
             years = sorted(self.data["year"].unique())
@@ -102,9 +101,9 @@ class ClimateDashboard:
 
         st.title("🌍 Climate Dashboard")
 
-        # -----------------------------------
-        # OVERVIEW METRICS
-        # -----------------------------------
+        # -----------------------------
+        # OVERVIEW
+        # -----------------------------
         st.subheader("📊 Overview")
 
         col1, col2 = st.columns(2)
@@ -119,34 +118,38 @@ class ClimateDashboard:
 
         st.metric("Average Value", round(avg_value, 2))
 
-        # -----------------------------------
+        # -----------------------------
         # DATA PREVIEW
-        # -----------------------------------
+        # -----------------------------
         st.subheader("📁 Dataset Preview")
 
-        st.dataframe(
-            self.filtered_data.head(10),
-            use_container_width=True
-        )
+        st.dataframe(self.filtered_data.head(10))
 
-        # -----------------------------------
-        # TREND ANALYSIS (FIXED FOR NO COUNTRY DATA)
-        # -----------------------------------
-        st.subheader("📈 Climate Trend")
+        # -----------------------------
+        # FIXED TREND (THIS FIXES YOUR ERROR)
+        # -----------------------------
+        st.subheader("📈 Trend Over Time")
 
         if "year" in self.filtered_data.columns:
 
-            trend_data = self.filtered_data.groupby("year")[self.selected_column].mean()
+            trend_data = (
+                self.filtered_data
+                .groupby("year", as_index=False)[self.selected_column]
+                .mean()
+            )
 
-            st.line_chart(trend_data)
+            # IMPORTANT FIX: avoid Streamlit index conflict
+            st.line_chart(
+                trend_data.set_index("year")
+            )
 
         else:
 
             st.line_chart(self.filtered_data[self.selected_column])
 
-        # -----------------------------------
-        # CHART VIEW
-        # -----------------------------------
+        # -----------------------------
+        # OTHER CHARTS
+        # -----------------------------
         st.subheader(f"📊 {self.chart_type}")
 
         Visualizer.show_chart(
@@ -155,16 +158,16 @@ class ClimateDashboard:
             self.selected_column
         )
 
-        # -----------------------------------
+        # -----------------------------
         # DISTRIBUTION
-        # -----------------------------------
+        # -----------------------------
         st.subheader("📊 Distribution")
 
         st.bar_chart(self.filtered_data[self.selected_column])
 
-        # -----------------------------------
+        # -----------------------------
         # NOTEBOOK VIEWER
-        # -----------------------------------
+        # -----------------------------
         if self.show_notebook:
 
             NotebookViewer.display_notebook_info()
