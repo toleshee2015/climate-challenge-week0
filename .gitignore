@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+.venv/ 
+__pycache__/ 
+.ipynb_checkpoints/ 
