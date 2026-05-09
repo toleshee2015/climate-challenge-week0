@@ -1,19 +1,12 @@
 class Utils:
 
     @staticmethod
-    def get_country_flags():
+    def clean_columns(df):
 
-        return {
-            "Ethiopia": "🇪🇹",
-            "Kenya": "🇰🇪",
-            "Nigeria": "🇳🇬",
-            "Sudan": "SD",
-            "tanzania": "Tz"
-        }
+        df.columns = (
+            df.columns
+            .str.strip()
+            .str.lower()
+        )
 
-    @staticmethod
-    def filter_countries(data, countries):
-
-        return data[
-            data["country"].isin(countries)
-        ]
+        return df
