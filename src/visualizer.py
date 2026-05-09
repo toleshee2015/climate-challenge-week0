@@ -6,19 +6,20 @@ class Visualizer:
     @staticmethod
     def show_chart(chart_type, data, column=None):
 
-        # -----------------------------
+        # SAFETY CHECK
+        if data is None or len(data) == 0:
+            st.warning("No data available for visualization")
+            return
+
         # LINE CHART
-        # -----------------------------
         if chart_type == "Line Chart":
 
             if column and column in data.columns:
-                st.line_chart(data[column])
+                st.line_chart(data.set_index(data.columns[0])[column])
             else:
                 st.line_chart(data)
 
-        # -----------------------------
         # BAR CHART
-        # -----------------------------
         elif chart_type == "Bar Chart":
 
             if column and column in data.columns:
@@ -26,9 +27,7 @@ class Visualizer:
             else:
                 st.bar_chart(data)
 
-        # -----------------------------
         # AREA CHART
-        # -----------------------------
         elif chart_type == "Area Chart":
 
             if column and column in data.columns:
@@ -36,8 +35,5 @@ class Visualizer:
             else:
                 st.area_chart(data)
 
-        # -----------------------------
-        # FALLBACK
-        # -----------------------------
         else:
-            st.warning("Invalid chart type selected")
+            st.warning(f"Unsupported chart type: {chart_type}")
