@@ -1,4 +1,10 @@
 
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(ROOT_DIR))
+
 import streamlit as st
 
 from src.data_loader import DataLoader
@@ -14,8 +20,6 @@ class ClimateDashboard:
         self.data = DataLoader.load_data()
 
         self.country_flags = Utils.get_country_flags()
-
-    from src.data_loader import DataLoader
     # -----------------------------------
     # PAGE SETUP
     # -----------------------------------
