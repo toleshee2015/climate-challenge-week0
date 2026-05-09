@@ -34,62 +34,29 @@ class ClimateDashboard:
     # -----------------------------------
     # SIDEBAR
     # -----------------------------------
-    def sidebar(self):
+    def create_comparison_table(data, selected_column):
 
-        st.sidebar.header("🌍 Country Comparison")
+    # Normalize column names
+    data.columns = data.columns.str.strip().str.lower()
 
-        country_col = Utils.find_country_column(self.data)
+    # Normalize selected column too
+    selected_column = selected_column.lower()
 
-        if country_col:
+    # Check columns
+    required_columns = ["country", "year", selected_column]
 
-            countries = sorted(self.data[country_col].unique())
+    for col in required_columns:
+        if col not in data.columns:
+            raise ValueError(f"Column '{col}' not found")
 
-            country_options = [
-                f"{self.country_flags.get(c, '🌍')} {c}"
-                for c in countries
-            ]
+    # Create pivot table
+    comparison = data.pivot_table(
+        index="year",
+        columns="country",
+        values=selected_column
+    )
 
-            selected_display = st.sidebar.multiselect(
-                "Select countries",
-                options=country_options,
-                default=country_options[:2]
-            )
-
-            selected_countries = [
-                c.split(" ", 1)[1]
-                for c in selected_display
-            ]
-
-            self.filtered_data = self.data[
-                self.data[country_col].isin(selected_countries)
-            ]
-
-        else:
-            self.filtered_data = self.data
-
-        self.numeric_columns = ClimateAnalysis.get_numeric_columns(
-            self.filtered_data
-        )
-
-        self.selected_column = st.sidebar.selectbox(
-            "Select variable",
-            self.numeric_columns
-        )
-
-        self.chart_type = st.sidebar.selectbox(
-            "Chart Type",
-            ["Line Chart", "Bar Chart", "Area Chart"]
-        )
-
-        # custom parameter
-        self.window_size = st.sidebar.slider(
-            "Custom Smoothing Parameter",
-            1,
-            10,
-            3
-        )
-
-    # -----------------------------------
+    return comparison
     # DASHBOARD
     # -----------------------------------
     def dashboard(self):
