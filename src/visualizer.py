@@ -1,36 +1,44 @@
-import streamlit as st
+import plotly.express as px
 
 
 class Visualizer:
 
     @staticmethod
-    def show_chart(chart_type, data, column):
+    def show_chart(chart_type, df, column):
 
-        if data is None or data.empty:
-            st.warning("No data available")
-            return
+        if chart_type == "Line Chart":
 
-        if column not in data.columns:
-            st.error(f"Column '{column}' not found in dataset")
-            return
+            fig = px.line(
+                df,
+                x="doy" if "doy" in df.columns else df.index,
+                y=column,
+                title=f"{column} Trend"
+            )
 
-        if chart_type == "line":
+        elif chart_type == "Bar Chart":
 
-            if "doy" in data.columns:
-                st.line_chart(data.set_index("doy")[column])
+            yearly = (
+                df.groupby("year", as_index=False)[column]
+                .mean()
+            )
 
-            elif "year" in data.columns:
-                st.line_chart(data.set_index("year")[column])
+            fig = px.bar(
+                yearly,
+                x="year",
+                y=column,
+                title=f"Yearly Average {column}"
+            )
 
-            else:
-                st.line_chart(data[column])
+        elif chart_type == "Histogram":
 
-        elif chart_type == "bar":
+            fig = px.histogram(
+                df,
+                x=column,
+                title=f"Distribution of {column}"
+            )
 
-            if "year" in data.columns:
-                st.bar_chart(data.groupby("year")[column].mean())
-            else:
-                st.bar_chart(data[column])
+        else:
 
-        elif chart_type == "histogram":
-            st.bar_chart(data[column])
+            fig = px.line(df, y=column)
+
+        return fig
