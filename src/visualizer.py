@@ -4,35 +4,29 @@ import streamlit as st
 class Visualizer:
 
     @staticmethod
-    def show_chart(chart_type, data, column=None):
+    def show_chart(chart_type, data, column):
 
-        if data is None or len(data) == 0:
+        if data is None or data.empty:
             st.warning("No data available")
             return
 
-        # LINE CHART
-        if chart_type == "Line Chart":
+        # prevent crash if column missing
+        if column not in data.columns:
+            st.error(f"Column '{column}' not found in dataset")
+            return
 
-            if column and column in data.columns:
-                st.line_chart(data.set_index(data.columns[0])[column])
+        # safe index selection
+        index_col = "doy" if "doy" in data.columns else data.columns[0]
+
+        if chart_type == "line":
+            st.line_chart(data.set_index(index_col)[column])
+
+        elif chart_type == "bar":
+            if "year" in data.columns:
+                yearly = data.groupby("year")[column].mean()
+                st.bar_chart(yearly)
             else:
-                st.line_chart(data)
-
-        # BAR CHART
-        elif chart_type == "Bar Chart":
-
-            if column and column in data.columns:
                 st.bar_chart(data[column])
-            else:
-                st.bar_chart(data)
 
-        # AREA CHART
-        elif chart_type == "Area Chart":
-
-            if column and column in data.columns:
-                st.area_chart(data[column])
-            else:
-                st.area_chart(data)
-
-        else:
-            st.warning("Invalid chart type selected")
+        elif chart_type == "histogram":
+            st.bar_chart(data[column])
