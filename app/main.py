@@ -1,3 +1,4 @@
+
 import streamlit as st
 
 from src.data_loader import DataLoader
@@ -14,6 +15,7 @@ class ClimateDashboard:
 
         self.country_flags = Utils.get_country_flags()
 
+    from src.data_loader import DataLoader
     # -----------------------------------
     # PAGE SETUP
     # -----------------------------------
