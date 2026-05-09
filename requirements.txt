@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+ HEAD
 streamlit
 pandas
 plotly
@@ -8,7 +8,6 @@ scipy
 numpy
 pytest
 requests
-=======
 altair==6.1.0
 anyio==4.13.0
 argon2-cffi==25.1.0
@@ -136,4 +135,4 @@ webcolors==25.10.0
 webencodings==0.5.1
 websocket-client==1.9.0
 widgetsnbextension==4.0.15
->>>>>>> 411a9f5 (clean Streamlit deployment setup)
+411a9f5 (clean Streamlit deployment setup)
