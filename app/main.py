@@ -74,7 +74,7 @@ class ClimateDashboard:
             False
         )
 
-        # Year filter
+        # Year filter (safe)
         if "year" in self.data.columns:
 
             years = sorted(self.data["year"].unique())
@@ -125,7 +125,7 @@ class ClimateDashboard:
         st.dataframe(self.filtered_data.head(10))
 
         # -----------------------------
-        # TREND (KEEP THIS CLEAN)
+        # TREND OVER TIME
         # -----------------------------
         st.subheader("📈 Trend Over Time")
 
@@ -144,13 +144,15 @@ class ClimateDashboard:
             st.line_chart(self.filtered_data[self.selected_column])
 
         # -----------------------------
-        # 🔥 VISUALIZER INTEGRATION (YOUR REQUESTED CODE ADDED HERE)
+        # VISUALIZER
         # -----------------------------
-   Visualizer.show_chart(
-    self.chart_type,
-    self.filtered_data,
-    self.selected_column
-)
+        st.subheader(f"📊 {self.chart_type}")
+
+        Visualizer.show_chart(
+            self.chart_type,
+            self.filtered_data,
+            self.selected_column
+        )
 
         # -----------------------------
         # DISTRIBUTION
