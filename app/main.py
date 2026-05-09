@@ -22,10 +22,9 @@ class ClimateDashboard:
 
     def __init__(self):
 
-        # Load dataset
         self.data = DataLoader.load_data()
 
-        # CLEAN COLUMN NAMES (IMPORTANT FIX)
+        # CLEAN COLUMN NAMES
         self.data.columns = (
             self.data.columns
             .str.strip()
@@ -75,7 +74,7 @@ class ClimateDashboard:
             False
         )
 
-        # Year filter (safe)
+        # Year filter
         if "year" in self.data.columns:
 
             years = sorted(self.data["year"].unique())
@@ -126,7 +125,7 @@ class ClimateDashboard:
         st.dataframe(self.filtered_data.head(10))
 
         # -----------------------------
-        # FIXED TREND (THIS FIXES YOUR ERROR)
+        # TREND (KEEP THIS CLEAN)
         # -----------------------------
         st.subheader("📈 Trend Over Time")
 
@@ -138,17 +137,14 @@ class ClimateDashboard:
                 .mean()
             )
 
-            # IMPORTANT FIX: avoid Streamlit index conflict
-            st.line_chart(
-                trend_data.set_index("year")
-            )
+            st.line_chart(trend_data.set_index("year"))
 
         else:
 
             st.line_chart(self.filtered_data[self.selected_column])
 
         # -----------------------------
-        # OTHER CHARTS
+        # 🔥 VISUALIZER INTEGRATION (YOUR REQUESTED CODE ADDED HERE)
         # -----------------------------
         st.subheader(f"📊 {self.chart_type}")
 
