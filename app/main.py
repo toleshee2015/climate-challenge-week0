@@ -91,7 +91,7 @@ class ClimateDashboard:
     # -----------------------------------
     def dashboard(self):
 
-        st.title("🌍 Climate Change Dashboard")
+        st.title("🌍 Climate Analysis Dashboard")
 
         # -----------------------------
         # METRICS
